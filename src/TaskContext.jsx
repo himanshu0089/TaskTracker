@@ -28,7 +28,7 @@ const TaskProvider = ({ children }) => {
       taskStatus: "Pending",
     };
 
-    setTaskList((prev) => [...prev, newTask]);
+    setTaskList((prev) => [newTask, ...prev]);
     setTaskValue("");
     setTotalTask((prev) => prev + 1);
   };
