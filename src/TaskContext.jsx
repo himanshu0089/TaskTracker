@@ -14,7 +14,7 @@ const TaskProvider = ({ children }) => {
   const [totalTask, setTotalTask] = useState(0);
   const [completed, setCompleted] = useState(0);
   const [search, setSearch] = useState("");
-  const [active, setActive] = useState("All"); // 'Pending', 'Completed', 'All'
+  const [active, setActive] = useState("All"); 
 
   const AddTask = () => {
     const trimmed = taskValue.trim();

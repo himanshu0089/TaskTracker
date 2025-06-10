@@ -95,8 +95,7 @@ function Task() {
           ))}
         </select>
       </div>
-
-      {/* Search and Status dropdown moved here */}
+      
       <SearchBar />
 
       <div className="space-y-4">
