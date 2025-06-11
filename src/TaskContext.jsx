@@ -14,7 +14,9 @@ const TaskProvider = ({ children }) => {
   const [totalTask, setTotalTask] = useState(0);
   const [completed, setCompleted] = useState(0);
   const [search, setSearch] = useState("");
-  const [active, setActive] = useState("All"); 
+  const [active, setActive] = useState("All");
+  const [editId, setEditId] = useState(null);
+  const [editValue, setEditValue] = useState("");
 
   const AddTask = () => {
     const trimmed = taskValue.trim();
@@ -61,14 +63,14 @@ const TaskProvider = ({ children }) => {
     setSearch,
     active,
     setActive,
-    status
+    status,
+    editId,
+    setEditId,
+    editValue,
+    setEditValue,
   };
 
-  return (
-    <TaskContext.Provider value={state}>
-      {children}
-    </TaskContext.Provider>
-  );
+  return <TaskContext.Provider value={state}>{children}</TaskContext.Provider>;
 };
 
 const useTask = () => useContext(TaskContext);

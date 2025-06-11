@@ -10,7 +10,9 @@ function Task() {
     taskValue, setTaskValue, AddTask,
     completed, setCompleted,
     totalTask, setTotalTask,
-    search, active
+    search, active,
+    editId, setEditId,
+    editValue, setEditValue
   } = useTask()
 
   const handleTask = (e) => setTaskValue(e.target.value)
@@ -34,6 +36,25 @@ function Task() {
     setTaskList(updated)
     setCompleted(updated.filter(task => task.taskStatus === "Completed").length)
   }
+
+  const handleEdit = (task) => {
+    setEditId(task.id);
+    setEditValue(task.text);
+  };
+
+  const saveEdit = (id) => {
+    const updated = taskList.map(task =>
+      task.id === id ? { ...task, text: editValue } : task
+    );
+    setTaskList(updated);
+    setEditId(null);
+    setEditValue("");
+  };
+
+  const cancelEdit = () => {
+    setEditId(null);
+    setEditValue("");
+  };
 
   const filteredTasks = taskList.filter(task => {
     const matchesSearch = search === "" || task.text.toLowerCase().includes(search.toLowerCase())
@@ -103,32 +124,65 @@ function Task() {
           <div key={node.id} className={`border rounded-md p-4 shadow-sm ${
             node.taskStatus === "Completed" ? "bg-green-50 border-green-300" : "bg-yellow-50 border-yellow-300"
           }`}>
-            <p className="text-lg font-medium text-gray-800">{node.text}</p>
-            <p className="text-sm text-gray-600">Mode: {node.mode}</p>
-            <p className="text-sm text-gray-600">Priority: {node.priority}</p>
-            <p className={`text-sm font-semibold ${
-              node.taskStatus === "Completed" ? "text-green-600" : "text-yellow-600"
-            }`}>
-              Status: {node.taskStatus}
-            </p>
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => toggleTaskStatus(node.id)}
-                className={`px-3 py-1 rounded text-white transition ${
-                  node.taskStatus === "Pending"
-                    ? "bg-blue-500 hover:bg-blue-600"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-              >
-                {node.taskStatus === "Pending" ? "Mark as Completed" : "Mark as Pending"}
-              </button>
-              <button
-                onClick={() => RemoveFromList(node.id)}
-                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
+            {editId === node.id ? (
+              <>
+                <input
+                  type="text"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  className="w-full px-3 py-2 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => saveEdit(node.id)}
+                    className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={cancelEdit}
+                    className="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-lg font-medium text-gray-800">{node.text}</p>
+                <p className="text-sm text-gray-600">Mode: {node.mode}</p>
+                <p className="text-sm text-gray-600">Priority: {node.priority}</p>
+                <p className={`text-sm font-semibold ${
+                  node.taskStatus === "Completed" ? "text-green-600" : "text-yellow-600"
+                }`}>
+                  Status: {node.taskStatus}
+                </p>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => toggleTaskStatus(node.id)}
+                    className={`px-3 py-1 rounded text-white transition ${
+                      node.taskStatus === "Pending"
+                        ? "bg-blue-500 hover:bg-blue-600"
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  >
+                    {node.taskStatus === "Pending" ? "Mark as Completed" : "Mark as Pending"}
+                  </button>
+                  <button
+                    onClick={() => handleEdit(node)}
+                    className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => RemoveFromList(node.id)}
+                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
@@ -136,4 +190,4 @@ function Task() {
   )
 }
 
-export default Task
+export default Task;
